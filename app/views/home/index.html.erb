@@ -1,0 +1,402 @@
+
+  <style type="text/css">
+      input::-ms-clear{display:none;}
+      .page .prev,.page .next{cursor:pointer;}
+      #footer .myslogan{margin-left:110px;}
+  </style>
+  <style type="text/css">
+      .statistics li .label{width: 1000px;}
+  </style>
+  <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=sTkDWT2GWQVToqkgGopxuVlr"></script>
+  <script type="text/javascript">
+      var map;
+      var car_types = {1: "三轮车", 2: "小型面包车", 3: "中型面包车", 4: "大型面包车", 5: "小型货车", 6:"中型货车", 7: "大型货车", 8: "超大型货车" };
+      var  hash_price1 = {
+          1: {1: 25, 2: 60, 3: 80, 4: 100, 5: 125, 6: 145, 7: 255},
+          2: {1: 25, 2: 50, 3: 75, 4: 95, 5: 115, 6: 155, 7: 298},
+          3: {1: 25, 2: 50, 3: 70, 4: 80, 5: 90, 6: 100, 7: 120, 8: 200},
+          4: {1: 25, 2: 50, 3: 80, 4: 95, 5: 105, 6: 115, 7: 135}
+      };
+      var hash_price2 = {
+          1: {1: 3, 2: 4, 3: 4.5, 4: 5, 5: 5.5, 6: 6, 7: 7},
+          2: {1: 3, 2: 4, 3: 4.5, 4: 5, 5: 5.5, 6: 7, 7: 8},
+          3: {1: 3, 2: 3, 3: 4, 4: 4, 5: 5, 6: 5, 7: 6},
+          4: {1: 3, 2: 3, 3: 4.5, 4: 5, 5: 5.5, 6: 6, 7: 7, 8: 8}
+       };
+
+      var rex = new RegExp(/^13[0-9]{9}$|^15[0-9]{9}$|^18[0-9]{9}|^17[0-9]{9}$|^14[0-9]{9}$/);
+
+      function init(){
+          map = new BMap.Map("allmap");
+          map.centerAndZoom('上海', 12);
+      }
+
+      function showcitylist(obj,event){
+          stopP(event);
+          $(obj).parent().children(".smenu").show();
+          $(".showorder dl").attr("style","");
+          $(obj).parent().parent().parent("dl").css("z-index",99);
+      }
+
+      function choosecity(obj,city,city_index){
+          var city_name = $(obj).html();
+          map.setCenter(city_name);
+          //切换了城市之后,把车型,始发地,目的地以及始发地和目的地的经纬度清空
+          $('#selectedCarType').val("");
+          $("#shifadishow1").val("");
+          $("#input_endaddr").val("");
+          $(".jingweidu").val("");
+          $(".statistics").hide();
+
+          $("#cityshow").html(city_name);
+          $("#hidden_select_city").val(city_index);
+          $(".smenu").hide();
+
+          $(".car-models").children().hide();
+          $(".car-models").children("." + city + "-car-types").show();
+
+          $("#city").val(city_name);
+      }
+
+      function xuanzhongcx(obj,chexing, type_index){
+          var city_index = $("#hidden_select_city").val();
+          $(".tips2").hide();
+          $(obj).parent().children().removeClass("cur");
+          $(obj).addClass("cur");
+          $("#car_type").html(car_types[type_index]);
+          $("#base_price").html(hash_price1[city_index][type_index]);
+          $("#more_price").html(hash_price2[city_index][type_index]);
+          $('#selectedCarType').val(type_index);
+          getdistance();
+          getStatisticsShow();
+      }
+
+
+      function suggestshifadi(key,obj){
+          if(obj.id == "input_endaddr" && (!$("#shifadishow1").val() || !$("#selectedCarType").val())){
+              $(obj).val("");
+              alert("请先选择车型和填写发货地址!")
+              return
+          }
+          var city = $("#cityshow").html();
+          var html = "";
+          var url = "http://api.map.baidu.com/place/v2/search?q="+key+"&region="+city+"&output=json&ak=sTkDWT2GWQVToqkgGopxuVlr&callback=?";
+          $.getJSON(url, function(json){
+              $.each(json.results,function(i,value){
+                  html = html + "<li onclick='xuanzhongshifadi(this,\""  + value.location.lng  + "\" ,\"" + value.location.lat + "\");'><span class='ico'></span><strong >" + value.name + "</strong><p class='xiangxiaddress'>" + (typeof value.address == 'undefined' ? '　':value.address) + "</p></li>";
+
+              });
+
+              $(obj).parent().children(".addresslist").children("ul").html(html);
+              if(html != ""){
+                  $(obj).parent().children(".tishisim").css("display","none");
+                  $(".showorder dl").attr("style","");
+                  $(obj).parent().parent().parent("dl").css("z-index",99);
+                  $(obj).parent().children(".addresslist").css("display","block");
+              }else{
+                  $(obj).parent().children(".tishisim").css("display","block");
+                  $(obj).parent().children(".addresslist").css("display","none");
+              }
+
+          });
+
+      }
+
+      function xuanzhongshifadi(obj,lng,lat){
+          var xiangxiaddr = $(obj).children(".xiangxiaddress").html();
+          var shifadi = $(obj).children("strong").html() +(xiangxiaddr==''||xiangxiaddr=='　'?'':('(' + xiangxiaddr+')'));
+          $(obj).parent().parent().parent().children("input").val(shifadi);
+          $(obj).parent().parent().css("display","none");
+
+          $(obj).parent().parent().parent().children(".jingweidu").val(lng + "," + lat);
+          getdistance();
+          getStatisticsShow();
+      }
+
+      function getdistance(){
+          var LatLng_arr = [];
+          $(".jingweidu").each(function(index,e){
+              if(e.value.length > 0){
+                    LatLng_arr.push(e.value.split(","))
+              }
+          });
+          if(LatLng_arr.length > 1){
+              var city = $("#hidden_select_city").val();
+              if(!city){
+                  alert("请选择城市!")
+                  return
+              }
+              var car_type = $('#selectedCarType').val();
+              if(!$('#selectedCarType').val()){
+                  alert("请选择车型!")
+                  return
+              }
+              var searchComplete = function (results){
+                  if (transit.getStatus() != BMAP_STATUS_SUCCESS){
+                      alert("地址解析失败!")
+                      return;
+                  }
+                  var plan = results.getPlan(0);
+                  var distance = (plan.getDistance(false)/1000).toFixed(1);
+                  $("#yugulicheng").html(distance);
+
+                  var price1= hash_price1[city][car_type];
+                  $("#base_price").html(price1);
+
+                  var price2= hash_price2[city][car_type];
+
+
+                  if(distance > 10){
+                      var total_price = price1 + (distance - 10)*price2;
+                      $("#more_price").html(((distance - 10)*price2).toFixed(1));
+                  }else{
+                      var total_price = price1;
+                      $("#more_price").html(0)
+                  }
+                  $("#yugufeiyong").html(total_price.toFixed(1))
+                  $(".statistics").show();
+              }
+
+              var start_point = new BMap.Point(LatLng_arr[0][0], LatLng_arr[0][1]);
+              var end_point = new BMap.Point(LatLng_arr[1][0], LatLng_arr[1][1]);
+              var transit = new BMap.DrivingRoute($("#cityshow").html() + "市", {renderOptions: {map: map},
+                  policy: BMAP_DRIVING_POLICY_LEAST_DISTANCE,
+                  onSearchComplete: searchComplete,
+                  onPolylinesSet: function(){
+//                      setTimeout(function(){alert(output)},"1000");
+                  }
+              });
+              transit.clearResults()
+              transit.search(start_point, end_point);
+          }
+      }
+
+      function subtract(obj){
+          var parentitem =  $(obj).parent().parent().parent().parent().parent();
+          var a = true;
+          //车型获取
+          var selectedCarType = $('#selectedCarType').val();
+          //发货地址获取
+          var shifadishow1 = $("#shifadishow1").val();
+          //首个收货地址获取
+          var input_endaddr = $("#input_endaddr").val();
+          if(selectedCarType == "" || shifadishow1 == "" || input_endaddr == ""){
+              a = false;
+          }
+          if(a){
+              $('.statistics').show();
+          }
+
+          $(".sort-down").removeClass("disable");
+          parentitem.children(".item:last").children().children().children().children(".sort-down").addClass("disable");
+
+          $(".sort-top").removeClass("disable");
+          parentitem.children(".item").eq(2).children().children().children().children(".sort-top").addClass("disable");
+
+      }
+
+      function submitnext(){
+          //判断是否选择城市
+          var city = $("#hidden_select_city").val();
+          if(!$("#hidden_select_city").val()){
+              alert("请选择城市!");
+              return;
+          }
+          //判断是否选择车型
+          var car_type = $("#selectedCarType").val();
+          if(!$("#selectedCarType").val()){
+              $(".tips2").show();
+              return;
+          }
+          //判断是否输入起始地
+          var chufadiitem = $("#formlulu").children(".item").eq(1);
+          var startaddress = chufadiitem.children(".cont").children().eq(0).children("dd").children(".posr").children(".startaddr").val();
+          if(startaddress == null  || startaddress == ""){
+              alert("请输入发货地址");
+              return;
+          }
+          //判断是否输入发货人姓名
+          var startname = chufadiitem.children(".cont").children().eq(1).children("dd").children(".linkname").val();
+          if(startname == null || startname == ""){
+              alert("请输入姓名");
+              return;
+          }
+          //判断手机号码是否输入有误
+          var startphone = chufadiitem.children(".cont").children().eq(2).children("dd").children(".phone").val();
+          if(startphone == null || startphone == ""){
+              alert("请输入手机号");
+              return;
+          }
+          mobile = startphone.replace('/(^\s*)|(\s*$)/g', "");
+          if (!rex.test(mobile) ){
+              chufadiitem.children(".cont").children().eq(2).children("dd").children(".tips-error").css("display","");
+              return;
+          }else{
+              chufadiitem.children(".cont").children().eq(2).children("dd").children(".tips-error").css("display","none");
+          }
+          //判断是否输入收货地址
+          var endaddress = $("#input_endaddr").val();
+          if(endaddress == null || endaddress == ""){
+              alert("请输入收货地址!")
+              return;
+          }
+
+          var memo = $("#memo").val();
+
+          $("#order_city").val(city);
+          $("#order_car_type").val(car_type);
+          $("#order_address_start").val(startaddress);
+          $("#order_address_end").val(endaddress);
+          $("#order_name").val(startname);
+          $("#order_tel").val(mobile);
+          $("#order_memo").val(memo);
+          $("#order_total_price").val($("#yugufeiyong").html());
+
+          document.getElementById("checksubmit").submit();
+
+      }
+
+
+      function stopP(e)
+      {
+          var evt = e || window.event;
+          //IE用cancelBubble=true来阻止而FF下需要用stopPropagation方法
+          evt.stopPropagation ? evt.stopPropagation() : (evt.cancelBubble=true);
+      }
+
+      //所有信息完整之后显示statistics的div   lhc   2015.1.13
+      function getStatisticsShow(){
+          var a = true;
+          //车型获取
+          var selectedCarType = $('#selectedCarType').val();
+          //发货地址获取
+          var shifadishow1 = $("#shifadishow1").val();
+          //首个收货地址获取
+          var input_endaddr = $("#input_endaddr").val();
+          if(selectedCarType == "" || shifadishow1 == "" || input_endaddr == ""){
+              a = false;
+          }
+          if(a){
+              $('.statistics').show();
+          }
+      }
+
+
+      $(document).bind('click',function(){ 	$(".smenu").css("display","none"); });
+      window.onload = init;
+  </script>
+
+<div class="crumbs" style="font-size: large"><a href="http://www.kuaigou.co/"><img src="assets/logo.png"><span>首页</span></a><span>&gt;</span>立即下单</div>
+<div id="container">
+  <div class="showorder">
+    <form action="" id="formlulu">
+      <div class="item">
+        <dl>
+          <dt>选择城市：</dt>
+          <dd>
+            <div class="diyselect">
+              <%= hidden_field_tag "hidden_select_city", 1%>
+              <div class="defult" onclick="showcitylist(this,event)"><em id="cityshow">上海</em><span class="ico"></span></div>
+              <div class="smenu">
+                <ul >
+                  <li  onclick="choosecity(this,'shanghai', 1);"   >上海</li>
+                  <li  onclick="choosecity(this,'beijing', 1);"   >北京</li>
+                  <li  onclick="choosecity(this,'qingdao', 1);"   >青岛</li>
+                  <li  onclick="choosecity(this,'wuhan', 1);"   >武汉</li>
+                  <!--<li  onclick="choosecity(this,'hangzhou', 2);"   >杭州</li>-->
+                  <!--<li  onclick="choosecity(this,'nanjing', 3);"   >南京</li>-->
+                  <!--<li  onclick="choosecity(this,'ningbo', 4);"   >宁波</li>-->
+                  <!--<li  onclick="choosecity(this,'changzhou', 5);"   >常州</li>-->
+                  <!--<li  onclick="choosecity(this,'wuxi', 6);"   >无锡</li>-->
+                </ul>
+              </div>
+            </div>
+          </dd>
+        </dl>
+        <dl>
+          <dt>选择车型：</dt>
+          <dd>
+            <%= render "car_types" %>
+            <span class="tips2" style="display:none;" >请选择车型</span>
+          </dd>
+        </dl>
+      </div>
+
+      <div  id="containermap" style="display:none;"></div>
+
+      <div class="item">
+        <div class="title"><h3>发货信息</h3></div>
+        <div class="cont">
+          <dl>
+            <dt>发货地址：</dt>
+            <dd><div class="posr"><input type="text" class="inp startaddr" id="shifadishow1" placeholder="请输入发货地址" style="width:428px;"  value=""  onkeyup="return suggestshifadi(this.value,this);"/>
+              <input type="hidden" class="jingweidu" value="" />
+              <div class="addresslist" style="display:none;">
+                <ul>
+
+                </ul>
+              </div>
+              <div class="tishisim" style="color:red; padding:5px 0 0 5px;display:none;">请选择地址</div>
+            </div>
+            </dd>
+          </dl>
+          <dl>
+            <dt>联系人姓名：</dt>
+            <dd><input type="text" class="inp linkname" placeholder="请输入姓名" /></dd>
+          </dl>
+          <dl>
+            <dt>联系电话：</dt>
+            <dd><input type="text" class="inp phone" placeholder="请输入联系电话" /> <span class="tips-error" style="display:none;">手机号输入有误,请重新输入</span> </dd>
+          </dl>
+        </div>
+      </div>
+      <div class="item">
+        <div class="title t-sh"><h3>收货信息</h3></div>
+        <div class="cont" >
+          <dl>
+            <dt>收货地址：</dt>
+            <dd><div class="posr"><input type="text" id="input_endaddr" class="inp endaddr" placeholder="请输入收货地址" style="width:428px;"  value="" onkeyup="return suggestshifadi(this.value,this);"/>
+              <input type="hidden" class="jingweidu" value="" />
+              <div class="addresslist" style="display:none;">
+                <ul>
+
+                </ul>
+
+              </div>
+              <div class="tishisim" style="color:red; padding:5px 0 0 5px;display:none;">请选择地址</div>
+            </div>
+            </dd>
+          </dl>
+          <dl>
+            <dt>备注信息：</dt>
+            <dd><%= text_area_tag :memo, nil, id: 'memo', cols: 48, rows: 6 %></dd>
+          </dl>
+        </div>
+      </div>
+
+      <div class="statistics" style="display:none;">
+        <ul id="xianshilist">
+          <li class="yugu"><span class="label">预估里程：</span><i id="yugulicheng">0</i>公里</li>
+          <li class="chushi"><span class="label">车型：</span><i  id="car_type"></i></li>
+          <li class="chushi"><span class="label">起步价：</span><i id="base_price">0</i>元</li>
+          <li class="chushi"><span class="label">超里程费：</span><i id="more_price">0</i>元</li>
+          <li class="yugu"><span class="label">预估费用：</span><i id="yugufeiyong">0</i>元</li>
+        </ul>
+      </div>
+      <div class="btndiv"><input type="button" value="提交订单" class="btn " onclick="submitnext();"  id="submitnexttag" /></div>
+    </form>
+  </div>
+</div>
+
+<%= form_for @order, url: orders_path, html: {id: "checksubmit"} do |f| %>
+    <%= f.hidden_field :city %>
+    <%= f.hidden_field :car_type %>
+    <%= f.hidden_field :address_start %>
+    <%= f.hidden_field :address_end %>
+    <%= f.hidden_field :name %>
+    <%= f.hidden_field :tel %>
+    <%= f.hidden_field :total_price %>
+    <%= f.hidden_field :memo %>
+<% end %>
+
+<div id="allmap" style="width: 100%;height: 650px;display: none;"></div>

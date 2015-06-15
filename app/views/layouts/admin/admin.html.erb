@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Kuaigou</title>
+  <%= stylesheet_link_tag 'admin/admin' %>
+  <%= javascript_include_tag "application" %>
+  <%#= javascript_include_tag 'admin/admin' %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+<%if session[:admin_id].present? %>
+    <div align="right" style="padding: 0 20px;font-size: large;"><%= @current_user.login %><%= link_to '退出系统', sign_out_path %></div>
+  <ul class="nav-list">
+    <li><%= link_to "订单管理",admin_orders_path, class: params[:controller] == 'admin/orders' ? 'active' : '' %></li>
+    <li><%= link_to "客服管理",admin_admins_path, class: params[:controller] == 'admin/admins' ? 'active' : ''  %></li>
+  </ul>
+<% end %>
+<p class="clear"></p>
+<% if flash[:notice] || flash[:alert] %>
+    <div align="center" style="color: red;"><%= flash[:notice] %></div>
+<% end %>
+<%= yield %>
+
+</body>
+</html>

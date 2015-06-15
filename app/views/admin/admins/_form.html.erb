@@ -1,0 +1,6 @@
+<% url = @admin.new_record? ? admin_admins_path : admin_admin_path %>
+<%= form_for @admin, url: url do |f| %>
+    <p>登录名:<%= f.text_field :login %></p>
+    <p>密&nbsp;&nbsp;&nbsp;码:<%= f.password_field :password %></p>
+    <%= f.submit "保存" %>
+<% end %>

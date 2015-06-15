@@ -1,0 +1,36 @@
+<p class="clear"></p>
+<div class="main-content">
+  <div class="page-content" style=" padding-top:40px;">
+    <% if @current_user.admin? %><div style="float: right; margin-right: 20px;"><%= link_to "增加客服账号", new_admin_admin_path %></div><% end %>
+    <div class="table-list">
+      <table>
+        <tr>
+          <th width="5%">NO</th>
+          <th width="10%">客服编号</th>
+          <th>客服名称</th>
+          <th width="8%">登录密码</th>
+          <th widht="8%">操作</th>
+        </tr>
+        <% @admins.each_with_index do |admin,index| %>
+            <tr>
+              <td><%= index+1 %></td>
+              <td><%= admin.id %></td>
+              <td><%= admin.login %></td>
+              <td><%= admin.password %></td>
+              <td>
+                <%= link_to '编辑', edit_admin_admin_path(admin) %>
+              </td>
+            </tr>
+        <% end %>
+        <% if @admins.length < 1 %>
+            <tr>
+              <td colspan="5">没有数据</td>
+            </tr>
+        <% end %>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+

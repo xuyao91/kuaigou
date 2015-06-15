@@ -1,0 +1,70 @@
+<div class="main-content">
+  <div class="page-content" style=" padding-top:40px;">
+    <!--<h3 class="order-title"><%= link_to "订单管理", admin_orders_path %></h3>-->
+    <div class="index-search">
+      <%= form_for @search, url: admin_orders_path do |f| %>
+          <span class="se-name">城市:</span>
+          <%= f.select :city_equals, Order.city_options, { include_blank: '' } %>
+          <span class="se-name">订单状态:</span>
+          <%= f.select :status_equals, Order.status_options, { include_blank: '' } %>
+          <span class="se-name">用户姓名:</span>
+          <%= f.text_field :name_contains, class: "width-100" %>
+          <span class="se-name">用户联系号码:</span>
+          <%= f.text_field :tel_equals, class: "width-150" %>
+          <span class="se-name">始发地:</span>
+          <%= f.text_field :address_start_contains, class: "width-150" %>
+          <span class="se-name">目的地:</span>
+          <%= f.text_field :address_start_contains, class: "width-150" %>
+          <input class="btn-search" name="commit" type="submit" value="检索">
+      <% end %>
+    </div>
+    <div class="table-list">
+      <table>
+        <tr>
+          <th width="5%">NO</th>
+          <th width="5%">订单编号</th>
+          <th width="5%">订单状态</th>
+          <th width="8%">城市</th>
+          <th width="5%">用户姓名</th>
+          <th width="8%">用户联系号码</th>
+          <th>始发地</th>
+          <th>目的地</th>
+          <th width="5%">总价</th>
+          <th width="10%">订单备注</th>
+          <th width="5%">最后更新者</th>
+          <th widht="8%">操作</th>
+        </tr>
+        <% @orders.each_with_index do |order,index| %>
+            <% page_index = params[:page] || 1 %>
+            <tr>
+              <td><%= index+1 + ((page_index.to_i - 1) * 3)%></td>
+              <td><%= order.id %></td>
+              <td><%= order.status_name %></td>
+              <td><%= order.city_name %></td>
+              <td><%= order.name %></td>
+              <td><%= order.tel %></td>
+              <td style="text-align: left"><%= order.address_start %></td>
+              <td style="text-align: left"><%= order.address_end %></td>
+              <td><%= order.total_price %></td>
+              <td><%= sanitize order.memo%></td>
+              <td><%= order.update_author %></td>
+              <td>
+                <%= button_to "更新订单为新订单状态", admin_order_path(order, status: 0), method: :put, class: 'no-btn' %> <br />
+                <%= button_to "更新订单为跟进中状态", admin_order_path(order, status: 1), method: :put, class: 'no-btn' %><br />
+                <%= button_to "更新订单为已完成状态", admin_order_path(order, status: 2), method: :put, class: 'no-btn' %><br />
+              </td>
+            </tr>
+        <% end %>
+        <% if @orders.length < 1 %>
+            <tr>
+              <td colspan="12">没有数据</td>
+            </tr>
+        <% end %>
+      </table>
+    </div>
+    <div style="padding: 0 20px;font-size: medium;" align="right"><%= paginate @orders %></div>
+  </div>
+
+</div>
+
+
