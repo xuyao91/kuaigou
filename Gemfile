@@ -35,6 +35,14 @@ end
 
 # Deploy with Capistrano
 # gem 'capistrano'
+group :development do
+  gem 'capistrano', '~> 3.0'
+  gem 'capistrano-rvm'
+  gem 'capistrano-bundler'
+  gem 'capistrano-rails'
+  gem 'capistrano-passenger'
+end
 
 # To use debugger
 # gem 'debugger'
+
