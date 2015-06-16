@@ -27,6 +27,7 @@ class Order < ActiveRecord::Base
   enum_attr :status, :in => [
        ['initial', 0, '新订单'],
        ['following', 1, '跟进中订单'],
-       ['completed', 2, '已完成订单']
+       ['completed', 2, '已完成订单'],
+       ['cancle', 3, '已取消订单']
    ]
 end

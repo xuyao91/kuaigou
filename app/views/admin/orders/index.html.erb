@@ -49,9 +49,10 @@
               <td><%= sanitize order.memo%></td>
               <td><%= order.update_author %></td>
               <td>
-                <%= button_to "更新订单为新订单状态", admin_order_path(order, status: 0), method: :put, class: 'no-btn' %> <br />
-                <%= button_to "更新订单为跟进中状态", admin_order_path(order, status: 1), method: :put, class: 'no-btn' %><br />
-                <%= button_to "更新订单为已完成状态", admin_order_path(order, status: 2), method: :put, class: 'no-btn' %><br />
+                <%= link_to "更新订单为新订单状态", admin_order_path(order, status: 0), method: :put, confirm: '确定将订单更新为新订单状态吗', class: 'no-btn btn btn-primary btn-sm btn-filter' %>
+                <%= link_to "更新订单为跟进中状态", admin_order_path(order, status: 1), method: :put, confirm: '确定将订单更新为跟进中状态吗?', class: 'no-btn btn btn-primary btn-sm btn-filter' %>
+                <%= link_to "更新订单为已完成状态", admin_order_path(order, status: 2), method: :put, confirm: '确定将订单更新为已完成状态吗?', class: 'no-btn btn btn-primary btn-sm btn-filter' %>
+                <%= link_to "更新订单为已取消订单", admin_order_path(order, status: 3), method: :put, confirm: '确定取消该订单吗?', class: 'no-btn btn btn-primary btn-sm btn-filter' %>
               </td>
             </tr>
         <% end %>
