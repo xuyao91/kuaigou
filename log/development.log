@@ -22366,3 +22366,60 @@ Served asset /jquery_ujs.js - 304 Not Modified (0ms)
 
 Started GET "/assets/logo.png" for 127.0.0.1 at 2015-06-12 10:25:44 +0800
 Served asset /logo.png - 304 Not Modified (0ms)
+Connecting to database specified by database.yml
+
+
+Started GET "/" for 127.0.0.1 at 2015-06-16 17:22:01 +0800
+Processing by HomeController#index as HTML
+  Rendered home/_car_types.html.erb (0.6ms)
+  Rendered home/index.html.erb within layouts/application (6.2ms)
+Compiled home.css  (0ms)  (pid 11737)
+Compiled application.css  (1ms)  (pid 11737)
+Completed 200 OK in 61ms (Views: 31.6ms | ActiveRecord: 1.0ms)
+
+
+Started GET "/assets/admin/admin.css?body=1" for 127.0.0.1 at 2015-06-16 17:22:01 +0800
+Served asset /admin/admin.css - 304 Not Modified (2ms)
+
+
+Started GET "/assets/application.css?body=1" for 127.0.0.1 at 2015-06-16 17:22:01 +0800
+Served asset /application.css - 200 OK (3ms)
+
+
+Started GET "/assets/jquery.js?body=1" for 127.0.0.1 at 2015-06-16 17:22:01 +0800
+Served asset /jquery.js - 304 Not Modified (2ms)
+
+
+Started GET "/assets/application.js?body=1" for 127.0.0.1 at 2015-06-16 17:22:01 +0800
+Served asset /application.js - 200 OK (3ms)
+
+
+Started GET "/assets/home.css?body=1" for 127.0.0.1 at 2015-06-16 17:22:01 +0800
+Served asset /home.css - 200 OK (1ms)
+
+
+Started GET "/assets/jquery_ujs.js?body=1" for 127.0.0.1 at 2015-06-16 17:22:01 +0800
+Served asset /jquery_ujs.js - 304 Not Modified (2ms)
+
+
+Started GET "/assets/logo.png" for 127.0.0.1 at 2015-06-16 17:22:01 +0800
+Served asset /logo.png - 200 OK (1ms)
+
+
+Started GET "/" for 127.0.0.1 at 2015-06-16 17:22:39 +0800
+Processing by HomeController#index as HTML
+  Rendered home/_car_types.html.erb (0.0ms)
+  Rendered home/index.html.erb within layouts/application (1.5ms)
+Completed 200 OK in 5ms (Views: 4.6ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/assets/jquery.js?body=1" for 127.0.0.1 at 2015-06-16 17:22:39 +0800
+Served asset /jquery.js - 304 Not Modified (0ms)
+
+
+Started GET "/assets/admin/admin.css?body=1" for 127.0.0.1 at 2015-06-16 17:22:39 +0800
+Served asset /admin/admin.css - 304 Not Modified (0ms)
+
+
+Started GET "/assets/jquery_ujs.js?body=1" for 127.0.0.1 at 2015-06-16 17:22:39 +0800
+Served asset /jquery_ujs.js - 304 Not Modified (0ms)

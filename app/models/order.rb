@@ -9,8 +9,8 @@ class Order < ActiveRecord::Base
        # ['changzhou', 5, '常州'],
        # ['wuxi', 6, '无锡']
        ['beijing', 2, '北京'],
-       ['qingdao', 1, '青岛'],
-       ['wuhan', 1, '武汉']
+       ['qingdao', 3, '青岛'],
+       ['wuhan', 4, '武汉']
    ]
 
   enum_attr :car_type, :in => [
