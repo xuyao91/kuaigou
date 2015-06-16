@@ -28,7 +28,7 @@ set :scm, :git
 # Default value for linked_dirs is []
 # set :linked_dirs, fetch(:linked_dirs, []).push('bin', 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', 'public/system')
 
-set :linked_files, %w{config/database.yml config/secrets.yml}
+set :linked_files, %w{config/database.yml}
 set :linked_dirs, %w{tmp/pids tmp/sockets log}
 
 # Default value for default_env is {}
@@ -37,7 +37,13 @@ set :linked_dirs, %w{tmp/pids tmp/sockets log}
 # Default value for keep_releases is 5
 # set :keep_releases, 5
 
+set :passenger_restart_with_touch, true
+
 namespace :deploy do
+
+	 # task :start, :roles => :app do  
+  #     run "touch #{current_path}/tmp/restart.txt"  
+  #   end
 
   after :restart, :clear_cache do
     on roles(:web), in: :groups, limit: 3, wait: 10 do
