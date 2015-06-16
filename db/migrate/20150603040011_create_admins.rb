@@ -7,6 +7,6 @@ class CreateAdmins < ActiveRecord::Migration
       t.timestamps
     end
 
-    Admin.create!({login: 'admin', password: '123456'})
+    Admin.create!({login: 'admin', password: 'kuaigou123456'})
   end
 end
