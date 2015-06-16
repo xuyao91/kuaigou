@@ -1,0 +1,7 @@
+.idea
+/public/uploads
+/public/tmp
+/public/images/verify/
+/public/logs
+/public/assets
+/public/__assets*

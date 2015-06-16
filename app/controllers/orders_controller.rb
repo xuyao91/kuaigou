@@ -1,5 +1,4 @@
 class OrdersController < ApplicationController
-  require 'pp'
 
   def create
     @order = Order.new(params[:order])

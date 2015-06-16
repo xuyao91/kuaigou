@@ -1,6 +1,5 @@
 class Admin::AdminsController < Admin::BaseController
   before_filter :find_admin, only: [:edit, :update]
-  require 'pp'
 
   def index
     @admins = Admin.service_admin

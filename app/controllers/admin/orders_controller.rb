@@ -1,5 +1,4 @@
 class Admin::OrdersController < Admin::BaseController
-  require 'pp'
 
   def index
     @search = Order.order("status asc,id desc").search(params[:search])
@@ -7,7 +6,6 @@ class Admin::OrdersController < Admin::BaseController
   end
 
   def update
-    pp params,'=============update'
     @order = Order.find_by_id(params[:id])
     return redirect_to admin_orders_path, notice: '订单不存在' unless @order
     @order.update_attributes(status: params[:status], update_author: @current_user.login)

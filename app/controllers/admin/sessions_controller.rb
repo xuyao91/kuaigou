@@ -1,5 +1,4 @@
 class Admin::SessionsController < Admin::BaseController
-  require 'pp'
   skip_filter :current_user, :redirect_sign_in
 
   def create
