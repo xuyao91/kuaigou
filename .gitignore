@@ -5,3 +5,8 @@
 /public/logs
 /public/assets
 /public/__assets*
+
+/log/*.*
+/tmp/**/*
+/static_page
+
