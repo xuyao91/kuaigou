@@ -1,7 +1,7 @@
 class WeixinController < ApplicationController
 	layout 'weixin'
 	PASSWORD = "123456"
-	SHOP_URL = "http://wap.koudaitong.com/v2/home/9rd4k3xf"
+	SHOP_URL = "http://wap.koudaitong.com/v2/feature/tlhp2h2b"
 
 	def check
 		if params[:password].to_s == PASSWORD
