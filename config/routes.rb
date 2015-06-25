@@ -10,4 +10,7 @@ Kuaigou::Application.routes.draw do
   match 'sign_out' => 'admin/sessions#destroy', as: :sign_out
 
   resources :orders, :home
+
+  match 'weixin' => 'weixin#index'
+  match 'weixin/check' => 'weixin#check'
 end

@@ -1,0 +1,57 @@
+ <div class="login-box">
+    <div class="login-title">
+      <div class="logo">
+        <a href="">
+          <img src="<%= asset_path "logo.jpg" %>" height="132" width="132" alt="">
+        </a>
+      </div>
+    </div>
+    <div class="form">
+	      <%= form_tag weixin_check_path do %>
+	        <!-- <div class="form-li first-li error">
+	          <input type="text" placeholder="请输入您的帐号" class="input">
+	        </div> -->
+	        <div class="form-li">
+	          <%= password_field_tag 'password', '', placeholder: "请输入密码", class: "input" %>
+	        </div>
+	        <div class="forget-box">
+			      <a href="javascript:;" class="forget">没有密码?　请联系ｘｘｘ</a>
+			    </div>
+	    </div>
+	    <%= link_to "登录",'javascript:;', class: "login" %>
+    <% end %>
+  </div>
+
+<style>
+	html{font-family:"microsoft yahei";min-height:100%;_height:100%;background:#f7f9f8}
+	body{margin:0;}
+	input{outline:none;}
+	a{text-decoration:none;}
+	.login-box{min-width:560px;height:400px;padding:20px;position:absolute;background:#fff;top:50%;left:50%;margin:-220px -300px;}
+	.login-title{text-align:center;}
+	.form{width:360px;margin:0 auto;}
+	.form-li{height:50px;margin-top:20px;position:relative;}
+	.input{width:330px;padding:15px;line-height:19px;font-size:16px;border-radius:3px;border:1px solid #bcbec1;}
+	.error{position:relative;}
+	.error .input{border-color:#e03e38;}
+	.error-tips{width:100px;font-size:14px;color:#e03e38;font-size:14px;line-height:19px;left:370px;top:15px; margin-top: 3px;}
+	.forget-box{margin:20px 0;text-align:center;}
+	.forget{font-size:13px;color:#767f93;}
+	.login{display:block;width:330px;height:20px;padding:15px;line-height:20px;margin:0 auto;text-align:center;background:#e03e38;color:#fff;font-size:16px;border-radius:5px;}
+</style>
+
+<script>
+	$(function(){
+		$(".login").click(function(){
+			if(!$("#password").val()){
+				if(!$(".form .form-li").hasClass('error')){
+					$(".form .form-li").append('<div class="error-tips">请输入密码</div>');
+					$(".form .form-li").addClass("error");
+				}
+				return false
+			}else{
+				$("form").submit();
+			}	
+		})
+	});
+</script>
