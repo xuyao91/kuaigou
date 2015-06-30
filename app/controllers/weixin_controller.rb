@@ -1,6 +1,6 @@
 class WeixinController < ApplicationController
 	layout 'weixin'
-	PASSWORD = "123456"
+	PASSWORD = "famorly1320"
 	SHOP_URL = "http://wap.koudaitong.com/v2/feature/tlhp2h2b"
 
 	def check
