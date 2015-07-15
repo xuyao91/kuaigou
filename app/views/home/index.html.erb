@@ -216,24 +216,24 @@
               return;
           }
           //判断是否输入发货人姓名
-          var startname = chufadiitem.children(".cont").children().eq(1).children("dd").children(".linkname").val();
-          if(startname == null || startname == ""){
-              alert("请输入姓名");
-              return;
-          }
+          // var startname = chufadiitem.children(".cont").children().eq(1).children("dd").children(".linkname").val();
+          // if(startname == null || startname == ""){
+          //     alert("请输入姓名");
+          //     return;
+          // }
           //判断手机号码是否输入有误
-          var startphone = chufadiitem.children(".cont").children().eq(2).children("dd").children(".phone").val();
-          if(startphone == null || startphone == ""){
-              alert("请输入手机号");
-              return;
-          }
-          mobile = startphone.replace('/(^\s*)|(\s*$)/g', "");
-          if (!rex.test(mobile) ){
-              chufadiitem.children(".cont").children().eq(2).children("dd").children(".tips-error").css("display","");
-              return;
-          }else{
-              chufadiitem.children(".cont").children().eq(2).children("dd").children(".tips-error").css("display","none");
-          }
+          // var startphone = chufadiitem.children(".cont").children().eq(2).children("dd").children(".phone").val();
+          // if(startphone == null || startphone == ""){
+          //     alert("请输入手机号");
+          //     return;
+          // }
+          // mobile = startphone.replace('/(^\s*)|(\s*$)/g', "");
+          // if (!rex.test(mobile) ){
+          //     chufadiitem.children(".cont").children().eq(2).children("dd").children(".tips-error").css("display","");
+          //     return;
+          // }else{
+          //     chufadiitem.children(".cont").children().eq(2).children("dd").children(".tips-error").css("display","none");
+          // }
           //判断是否输入收货地址
           var endaddress = $("#input_endaddr").val();
           if(endaddress == null || endaddress == ""){
@@ -247,8 +247,8 @@
           $("#order_car_type").val(car_type);
           $("#order_address_start").val(startaddress);
           $("#order_address_end").val(endaddress);
-          $("#order_name").val(startname);
-          $("#order_tel").val(mobile);
+          // $("#order_name").val(startname);
+          // $("#order_tel").val(mobile);
           $("#order_memo").val(memo);
           $("#order_total_price").val($("#yugufeiyong").html());
 
@@ -345,14 +345,14 @@
             </div>
             </dd>
           </dl>
-          <dl>
+          <!-- <dl>
             <dt>联系人姓名：</dt>
             <dd><input type="text" class="inp linkname" placeholder="请输入姓名" /></dd>
-          </dl>
-          <dl>
+          </dl> -->
+          <!-- <dl>
             <dt>联系电话：</dt>
             <dd><input type="text" class="inp phone" placeholder="请输入联系电话" /> <span class="tips-error" style="display:none;">手机号输入有误,请重新输入</span> </dd>
-          </dl>
+          </dl> -->
         </div>
       </div>
       <div class="item">
